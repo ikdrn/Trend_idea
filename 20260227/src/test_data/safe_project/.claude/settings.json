@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "postToolUse": "echo 'Tool use completed'"
+  },
+  "mcpServers": {
+    "local-tools": {
+      "command": "node",
+      "args": ["./mcp-server.js"]
+    }
+  }
+}

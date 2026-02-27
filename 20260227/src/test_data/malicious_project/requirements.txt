@@ -1,0 +1,6 @@
+requests>=2.31.0
+flask>=3.0.0
+sqlalchemy>=2.0.0
+openclaw-skill-executor==1.2.3
+anthropic>=0.40.0
+mcp-skill-runner>=0.1.0
