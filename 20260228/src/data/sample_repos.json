@@ -1,0 +1,62 @@
+{
+  "fetched_at": "2026-02-28T00:00:00Z",
+  "source": "GitHub Trending (2026-02-28)",
+  "repos": [
+    {
+      "owner": "bytedance",
+      "name": "deer-flow",
+      "description": "An open-source SuperAgent harness that researches, codes, and creates",
+      "language": "TypeScript",
+      "url": "https://github.com/bytedance/deer-flow",
+      "star_history": [14200, 15100, 16300, 17800, 18900, 20100, 21500]
+    },
+    {
+      "owner": "obra",
+      "name": "superpowers",
+      "description": "An agentic skills framework & software development methodology that works",
+      "language": "Shell",
+      "url": "https://github.com/obra/superpowers",
+      "star_history": [52000, 53400, 55100, 57200, 58600, 59900, 61100]
+    },
+    {
+      "owner": "RightNow-AI",
+      "name": "picolm",
+      "description": "Run a 1-billion parameter LLM on a $10 board with 256MB RAM",
+      "language": "C",
+      "url": "https://github.com/RightNow-AI/picolm",
+      "star_history": [200, 310, 450, 620, 780, 940, 1100]
+    },
+    {
+      "owner": "D4Vinci",
+      "name": "Scrapling",
+      "description": "Adaptive Web Scraping framework for everything from single requests to full-scale crawls",
+      "language": "Python",
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "star_history": [13100, 13800, 14600, 15400, 16100, 16800, 17300]
+    },
+    {
+      "owner": "shareAI-lab",
+      "name": "learn-claude-code",
+      "description": "Bash is all you need — a nano Claude Code-like agent, built from 0 to 1",
+      "language": "TypeScript",
+      "url": "https://github.com/shareAI-lab/learn-claude-code",
+      "star_history": [9200, 10800, 12100, 13500, 15000, 16500, 17900]
+    },
+    {
+      "owner": "google-research",
+      "name": "timesfm",
+      "description": "TimesFM: pretrained time-series foundation model for zero-shot forecasting",
+      "language": "Python",
+      "url": "https://github.com/google-research/timesfm",
+      "star_history": [5800, 6100, 6300, 6500, 6650, 6780, 6900]
+    },
+    {
+      "owner": "hesamsheikh",
+      "name": "awesome-openclaw-usecases",
+      "description": "A community collection of OpenClaw use cases for making life easier",
+      "language": null,
+      "url": "https://github.com/hesamsheikh/awesome-openclaw-usecases",
+      "star_history": [1200, 2100, 3400, 4800, 5900, 6800, 7700]
+    }
+  ]
+}
