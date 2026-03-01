@@ -1,0 +1,69 @@
+{
+  "name": "AI Usage Policy — Red Lines",
+  "version": "1.0",
+  "description": "Policy inspired by Anthropic's red lines communicated to the US Pentagon (2026-02-27). Defines prohibited uses of AI APIs within a codebase.",
+  "rules": [
+    {
+      "id": "NO_AUTONOMOUS_WEAPONS",
+      "description": "AI models must not be used for fully autonomous weapons targeting",
+      "severity": "CRITICAL",
+      "patterns": [
+        "autonom\\w*[_ ]?(weapon|target|kill|lethal|strike)",
+        "(weapon|target|kill|lethal|strike)[_ ]?autonom",
+        "autonomous[_ ]?targeting",
+        "target[_ ]?selection[\\s\\S]{0,40}(claude|gpt|gemini|llama|mistral|ai)"
+      ],
+      "note": "Ref: Anthropic red line — 'fully autonomous weapons' (2026-02-27)"
+    },
+    {
+      "id": "NO_MASS_SURVEILLANCE",
+      "description": "AI models must not power mass surveillance of civilians",
+      "severity": "CRITICAL",
+      "patterns": [
+        "mass[_ ]?surveill",
+        "bulk[_ ]?(monitor|surveill|track|collect)[\\s\\S]{0,40}(citizen|civilian|public|population)",
+        "population[_ ]?track[\\s\\S]{0,40}(ai|claude|gpt|gemini)",
+        "civil(ian)?[_ ]?monitor[\\s\\S]{0,40}autonom"
+      ],
+      "note": "Ref: Anthropic red line — 'mass surveillance of Americans' (2026-02-27)"
+    },
+    {
+      "id": "NO_HARDCODED_AI_KEYS",
+      "description": "AI vendor API keys must not be hardcoded in source files",
+      "severity": "HIGH",
+      "patterns": [
+        "sk-ant-api0[0-9]-[A-Za-z0-9_-]{20,}",
+        "sk-proj-[A-Za-z0-9_-]{20,}",
+        "AIza[A-Za-z0-9_-]{35}",
+        "ANTHROPIC_API_KEY\\s*=\\s*['\"][A-Za-z0-9_-]{20,}['\"]",
+        "OPENAI_API_KEY\\s*=\\s*['\"][A-Za-z0-9_-]{20,}['\"]"
+      ],
+      "note": "Hardcoded keys are a supply-chain risk (ref: Google Cloud 3000 key exposure, 2026-03-01)"
+    },
+    {
+      "id": "NO_UNREVIEWED_MODEL_EXECUTION",
+      "description": "High-stakes automated decisions must include a human review step",
+      "severity": "MEDIUM",
+      "patterns": [
+        "autoApprove\\s*[=:]\\s*true",
+        "skipHumanReview\\s*[=:]\\s*true",
+        "humanInLoop\\s*[=:]\\s*false",
+        "requiresApproval\\s*[=:]\\s*false",
+        "bypassReview\\s*="
+      ],
+      "note": "Ref: OpenAI / Anthropic red line — no 'high-stakes automated decisions without human oversight'"
+    },
+    {
+      "id": "NO_PII_WITHOUT_CONSENT_FLAG",
+      "description": "Processing of PII through AI APIs requires an explicit consent flag",
+      "severity": "MEDIUM",
+      "patterns": [
+        "sendPII\\s*[=:]\\s*true",
+        "includePII\\s*[=:]\\s*true",
+        "piiConsent\\s*[=:]\\s*false",
+        "stripPII\\s*[=:]\\s*false"
+      ],
+      "note": "Best practice: never send PII to external AI APIs without explicit consent tracking"
+    }
+  ]
+}
