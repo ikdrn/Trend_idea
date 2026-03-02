@@ -1,0 +1,12 @@
+{
+  "name": "ai-red-lines",
+  "version": "1.0.0",
+  "description": "AI usage policy compliance checker — inspired by Anthropic red lines",
+  "note": "Originally designed for Deno; runs on bun (TypeScript-native) or ts-node",
+  "tasks": {
+    "demo": "bun main.ts --demo",
+    "demo:json": "bun main.ts --json --demo",
+    "scan": "bun main.ts .",
+    "scan:json": "bun main.ts --json ."
+  }
+}
