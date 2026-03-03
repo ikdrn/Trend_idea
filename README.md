@@ -1,0 +1,31 @@
+# Trend_idea
+
+このリポジトリは、**毎日のトレンド調査**と、そこから作る**小さなシステム試作**を記録する場所です。
+
+非エンジニアの方でも追いやすいように、まずは以下の2つだけ覚えればOKです。
+
+- `CLAUDE.md`：**毎日の作業手順書**（どう進めるか）
+- `YYYYMMDD/readme.md`：**その日の成果物メモ**（何を調べて何を作ったか）
+
+---
+
+## 過去の実施記録（履歴）
+
+> これまで `CLAUDE.md` にあった履歴を、ここ（ルート README）へ移動しました。
+
+| 日付 | システム名 | 主なトレンド | 成果ディレクトリ |
+|------|-----------|------------|------------------|
+| 20260227 | `ai-repo-auditor` | Claude Code RCE (CVE-2025-59536)、OpenClaw/ClawHavoc | `20260227/` |
+| 20260228 | `mini-deerflow` | ByteDance DeerFlow 2.0、Google TimesFM、PicoLM | `20260228/` |
+| 20260301 | `csi-motion-detector` | wifi-densepose (GitHub Trending #1)、Claude in Excel (PH #1)、Cisco SD-WAN CISA緊急指令 | `20260301/` |
+| 20260302 | `ai-red-lines` | Anthropic Pentagon 追放・AI レッドライン、FortiGate 600 台 AI 支援攻撃、Deno v2.7 / TypeScript #1 | `20260302/` |
+| 20260303 | `trend-mixer-cli` | AIエージェント運用の継続注目、セキュリティ優先度整理、Trending可視化需要 | `20260303/` |
+
+---
+
+## 使い方（かんたん版）
+
+1. 今日の日付フォルダ（例：`20260303/`）を開く
+2. `readme.md` を読むと、その日の調査内容とアイデアがわかる
+3. `src/` に動くコード、`docs/` に補足資料がある
+
