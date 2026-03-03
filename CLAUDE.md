@@ -73,6 +73,28 @@ touch YYYYMMDD/readme.md
 
 ---
 
+### Step 3.5: 実装言語の選定（トレンド反映ルール）
+
+> ここを追加：Python 固定にしないためのルール
+
+本日のミニアプリは、**過去24時間のトレンドで目立った言語・ランタイム**を優先して選定する。
+
+**選び方（優先順）**:
+1. GitHub Trending / Hacker News / Product Hunt で言及が多い言語・ランタイムを候補化
+2. 候補のうち、**この環境で実行確認できるもの**を採用
+3. 同点なら、直近で使っていない言語を優先（偏り防止）
+
+**README に必ず書くこと**:
+- 「なぜその言語を選んだか」（トレンドとの関係）
+- 実行コマンド（例: `python3 src/main.py` / `bun src/main.ts` / `node src/main.js`）
+
+**初心者向けの原則**:
+- 1コマンドで動く構成を優先
+- 外部依存は最小限
+- セットアップ手順を3ステップ以内で書く
+
+---
+
 ### Step 4: README の記述
 
 `YYYYMMDD/readme.md` に以下の内容を Markdown 形式で記述する。
@@ -110,16 +132,17 @@ Step 3 で考案したシステムを `YYYYMMDD/src/` に実装する。
 
 **実装基準**:
 - 実際に動作する（または実行手順が明確な）コードであること
-- 小さくて構わないが、`python3 main.py` 等で即座に動作確認できること
-- 外部依存は最小限に（標準ライブラリ優先、必要な場合は `requirements.txt` を同梱）
+- 小さくて構わないが、`<runtime> <entrypoint>` で即座に動作確認できること
+  - 例: `python3 src/main.py` / `bun src/main.ts` / `node src/main.js`
+- 外部依存は最小限に（標準ライブラリ・組み込み機能優先、必要な場合は依存定義ファイルを同梱）
 - 設計図・API レスポンス例・シーケンス図があれば `YYYYMMDD/docs/` に配置
 
 **推奨ファイル構成**（言語・内容に応じて調整）:
 
 ```
 YYYYMMDD/src/
-├── main.py（またはメインエントリポイント）
-├── requirements.txt（外部依存がある場合のみ）
+├── main.py / main.ts / main.js（メインエントリポイント）
+├── requirements.txt / package.json / deno.json（外部依存がある場合のみ）
 └── （必要に応じてサブモジュール・データファイル等）
 
 YYYYMMDD/docs/
@@ -182,7 +205,7 @@ feat: [YYYYMMDD] トレンドまとめとシステム開発
 - [ ] システムアイデアが複数トレンドの組み合わせになっているか
 
 ### ソースコード
-- [ ] `python3 src/main.py` 等で実際に動作するか
+- [ ] `README に記載した実行コマンド` で実際に動作するか
 - [ ] エラーなく最後まで実行できるか
 - [ ] `docs/design.md` に設計概要が記載されているか
 
@@ -195,12 +218,7 @@ feat: [YYYYMMDD] トレンドまとめとシステム開発
 
 ## 過去の実施記録
 
-| 日付 | システム名 | 主なトレンド | ソース |
-|------|-----------|------------|-------|
-| 20260227 | `ai-repo-auditor` | Claude Code RCE (CVE-2025-59536)、OpenClaw/ClawHavoc | `20260227/` |
-| 20260228 | `mini-deerflow` | ByteDance DeerFlow 2.0、Google TimesFM、PicoLM | `20260228/` |
-| 20260301 | `csi-motion-detector` | wifi-densepose (GitHub Trending #1)、Claude in Excel (PH #1)、Cisco SD-WAN CISA緊急指令 | `20260301/` |
-| 20260302 | `ai-red-lines` | Anthropic Pentagon 追放・AI レッドライン、FortiGate 600 台 AI 支援攻撃、Deno v2.7 / TypeScript #1 | `20260302/` |
+過去の実施記録は、リポジトリ直下の `README.md` に集約しました。
 
 ---
 
@@ -210,9 +228,13 @@ feat: [YYYYMMDD] トレンドまとめとシステム開発
 - push 先ブランチが `claude/` で始まっているか確認する
 - `git push -u origin claude/daily-trends-automation-FuNfP` のように完全なブランチ名を指定する
 
-### スクリプトが `ModuleNotFoundError` で失敗する
-- 外部ライブラリを使用している場合は `requirements.txt` を同梱し、README に `pip install -r requirements.txt` の手順を記載する
-- 標準ライブラリのみで実装できないか再検討する
+### スクリプトが依存エラーで失敗する（例: `ModuleNotFoundError` / `Cannot find module`）
+- 使用言語に応じた依存定義ファイルを同梱する
+  - Python: `requirements.txt`
+  - Node/Bun: `package.json`
+  - Deno: `deno.json`
+- README にセットアップ手順を明記する（例: `pip install -r ...` / `npm install`）
+- 可能なら外部依存を減らし、初心者でも再現しやすい構成にする
 
 ### 情報源から過去 24 時間以内の情報が見つからない
 - Web 検索クエリに日付（例: `February 28 2026`）を明示的に含める
