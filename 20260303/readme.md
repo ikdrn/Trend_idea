@@ -1,0 +1,1 @@
+Complete trend summary and system idea document
