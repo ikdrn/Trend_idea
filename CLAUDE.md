@@ -23,11 +23,13 @@ Trend_idea/
 
 ## Step 1: 日付取得と作業環境の構築
 
-システム時刻から本日の日付を YYYYMMDD 形式で取得し、以下のディレクトリ・ファイルを作成する。
+**JST（日本標準時、UTC+9）** で本日の日付を YYYYMMDD 形式で取得し、以下のディレクトリ・ファイルを作成する。
 
 ```bash
-mkdir -p YYYYMMDD/src YYYYMMDD/docs  
-touch YYYYMMDD/readme.md
+# JSTで日付を取得する
+DATE=$(TZ='Asia/Tokyo' date +%Y%m%d)
+mkdir -p $DATE/src $DATE/docs
+touch $DATE/readme.md
 ```
 
 作成物:
