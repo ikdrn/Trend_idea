@@ -20,6 +20,9 @@
 | 20260301 | [A] フロントエンドUI | Vanilla JS | `csi-motion-detector` | wifi-densepose (GitHub Trending #1)、Claude in Excel (PH #1)、Cisco SD-WAN CISA緊急指令 | `20260301/` |
 | 20260302 | [B] フルスタックWebアプリ | Node.js + Express | `ai-red-lines` | Anthropic Pentagon 追放・AI レッドライン、FortiGate 600 台 AI 支援攻撃、Deno v2.7 / TypeScript #1 | `20260302/` |
 | 20260303 | [C] CLIツール | Go | `trend-mixer-cli` | AIエージェント運用の継続注目、セキュリティ優先度整理、Trending可視化需要 | `20260303/` |
+| 20260305 | [D] セキュリティ／ネットワーク | Python | `ThreatPulse` | MacBook Neo $599、Cisco CVE-2026-20127 CVSS 10.0、ハクティビスト DDoS 149件、Wi-Fi センシング（RuView） | `20260305/` |
+| 20260307 | [C] CLIツール | Rust | `vulntriage` | Windsurf/Cursor マルチエージェント並列開発、nearai/ironclaw Rust セキュリティ、Android 129件 CVE パッチ | `20260307/` |
+| 20260309 | [D] セキュリティ／ネットワーク | Python | `AgentAudit` | Agent Safehouse (HN Top)、MCP2CLI、Anthropic×Firefox 22件脆弱性発見、NIST AI エージェントセキュリティ | `20260309/` |
 
 ---
 
