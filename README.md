@@ -13,13 +13,13 @@
 
 > これまで `CLAUDE.md` にあった履歴を、ここ（ルート README）へ移動しました。
 
-| 日付 | システム名 | 主なトレンド | 成果ディレクトリ |
-|------|-----------|------------|------------------|
-| 20260227 | `ai-repo-auditor` | Claude Code RCE (CVE-2025-59536)、OpenClaw/ClawHavoc | `20260227/` |
-| 20260228 | `mini-deerflow` | ByteDance DeerFlow 2.0、Google TimesFM、PicoLM | `20260228/` |
-| 20260301 | `csi-motion-detector` | wifi-densepose (GitHub Trending #1)、Claude in Excel (PH #1)、Cisco SD-WAN CISA緊急指令 | `20260301/` |
-| 20260302 | `ai-red-lines` | Anthropic Pentagon 追放・AI レッドライン、FortiGate 600 台 AI 支援攻撃、Deno v2.7 / TypeScript #1 | `20260302/` |
-| 20260303 | `trend-mixer-cli` | AIエージェント運用の継続注目、セキュリティ優先度整理、Trending可視化需要 | `20260303/` |
+| 日付 | カテゴリ | 言語/FW | システム名 | 主なトレンド | 成果ディレクトリ |
+|------|---------|---------|-----------|------------|------------------|
+| 20260227 | [D] セキュリティ／ネットワーク | Python | `ai-repo-auditor` | Claude Code RCE (CVE-2025-59536)、OpenClaw/ClawHavoc | `20260227/` |
+| 20260228 | [H] AIインテグレーション | Python | `mini-deerflow` | ByteDance DeerFlow 2.0、Google TimesFM、PicoLM | `20260228/` |
+| 20260301 | [A] フロントエンドUI | Vanilla JS | `csi-motion-detector` | wifi-densepose (GitHub Trending #1)、Claude in Excel (PH #1)、Cisco SD-WAN CISA緊急指令 | `20260301/` |
+| 20260302 | [B] フルスタックWebアプリ | Node.js + Express | `ai-red-lines` | Anthropic Pentagon 追放・AI レッドライン、FortiGate 600 台 AI 支援攻撃、Deno v2.7 / TypeScript #1 | `20260302/` |
+| 20260303 | [C] CLIツール | Go | `trend-mixer-cli` | AIエージェント運用の継続注目、セキュリティ優先度整理、Trending可視化需要 | `20260303/` |
 
 ---
 
