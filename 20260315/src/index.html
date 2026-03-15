@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>patch-pulse — March 2026 CVE Landscape</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="logo">patch<span>·pulse</span></div>
+  <span class="badge critical">83 CVEs</span>
+  <span class="badge kev">3 CISA KEV</span>
+  <span class="badge">Patch Tuesday 2026-03-10</span>
+  <span class="subtitle">March 2026 Vulnerability Landscape · D3.js</span>
+</header>
+
+<main>
+  <!-- Stats Row -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card red">
+      <div class="value" id="stat-total">83</div>
+      <div class="label">Total CVEs</div>
+    </div>
+    <div class="stat-card red">
+      <div class="value" id="stat-critical">8</div>
+      <div class="label">Critical</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="value" id="stat-important">75</div>
+      <div class="label">Important</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="value" id="stat-kev">3</div>
+      <div class="label">CISA KEV</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="value" id="stat-wild">4</div>
+      <div class="label">In the Wild</div>
+    </div>
+    <div class="stat-card green">
+      <div class="value" id="stat-max-cvss">10.0</div>
+      <div class="label">Max CVSS</div>
+    </div>
+  </div>
+
+  <!-- Charts Row 1 -->
+  <div class="charts-grid">
+    <!-- Donut: CVE by Type -->
+    <div class="chart-card">
+      <div class="chart-title">脆弱性タイプ別 分布</div>
+      <div class="donut-wrap">
+        <svg id="donut-chart" class="chart-svg" style="max-width:200px;height:200px;"></svg>
+        <div class="donut-legend" id="donut-legend"></div>
+      </div>
+    </div>
+
+    <!-- Scatter: CVSS by product -->
+    <div class="chart-card">
+      <div class="chart-title">CVSS スコア分布 (注目CVE)</div>
+      <svg id="scatter-chart" class="chart-svg" style="height:220px;"></svg>
+    </div>
+
+    <!-- Bubble: CVE type bubble chart - full width -->
+    <div class="chart-card full-width">
+      <div class="chart-title">脆弱性タイプ × CVSS スコア マトリクス</div>
+      <svg id="bubble-chart" class="chart-svg" style="height:260px;"></svg>
+    </div>
+  </div>
+
+  <!-- CVE Table -->
+  <div class="chart-card">
+    <div class="chart-title">注目 CVE 一覧</div>
+    <div class="filter-bar">
+      <span class="filter-label">フィルター:</span>
+      <button class="filter-btn active" data-filter="all">すべて</button>
+      <button class="filter-btn" data-filter="Critical">Critical のみ</button>
+      <button class="filter-btn" data-filter="wild">実環境悪用あり</button>
+      <button class="filter-btn" data-filter="kev">CISA KEV</button>
+    </div>
+    <div class="cve-table-wrap">
+      <table id="cve-table">
+        <thead>
+          <tr>
+            <th>CVE ID</th>
+            <th>製品</th>
+            <th>タイプ</th>
+            <th>深刻度</th>
+            <th>CVSS</th>
+            <th>実環境</th>
+            <th>概要</th>
+          </tr>
+        </thead>
+        <tbody id="cve-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div class="tooltip" id="tooltip"></div>
+
+<footer>
+  <span>データ源: <a href="https://msrc.microsoft.com/update-guide/" target="_blank">Microsoft MSRC</a> · <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank">CISA KEV</a> · <a href="https://www.cyera.com/research/ni8mare-unauthenticated-remote-code-execution-in-n8n-cve-2026-21858" target="_blank">Cyera Research (n8n)</a></span>
+  <span>patch-pulse · 2026-03-15 · D3.js v7</span>
+</footer>
+
+<!-- D3.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script type="module" src="main.js"></script>
+</body>
+</html>
