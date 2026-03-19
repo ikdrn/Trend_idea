@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N体問題シミュレーター | Gravity Playground</title>
+  <style>
+    :root {
+      --bg: #0a0a14;
+      --panel: #12121f;
+      --border: #2a2a44;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --text: #e0e0f0;
+      --muted: #7070a0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    header .badge {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      opacity: 0.85;
+    }
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    #canvas {
+      flex: 1;
+      display: block;
+      cursor: crosshair;
+      background: var(--bg);
+    }
+    .sidebar {
+      width: 240px;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .section {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    label span.val {
+      color: var(--accent);
+      font-weight: 600;
+      min-width: 38px;
+      text-align: right;
+    }
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--accent);
+      margin-top: 2px;
+    }
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      text-align: left;
+    }
+    button:hover { background: var(--border); border-color: var(--accent); }
+    button.danger { border-color: var(--accent2); color: var(--accent2); }
+    button.danger:hover { background: rgba(255,101,132,0.12); }
+    .stats {
+      font-size: 0.78rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+    .stats b { color: var(--text); }
+    .hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.6;
+      padding: 10px 16px;
+    }
+    .hint kbd {
+      background: var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.72rem;
+      color: var(--text);
+    }
+    /* mobile */
+    @media (max-width: 600px) {
+      .sidebar { width: 100%; height: 200px; border-left: none; border-top: 1px solid var(--border); }
+      .main { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>⚛ Gravity Playground — N体問題シミュレーター</h1>
+  <span class="badge">Canvas</span>
+  <span class="badge" style="background:var(--accent2)">Trend 2026-03-19</span>
+</header>
+<div class="main">
+  <canvas id="canvas"></canvas>
+  <aside class="sidebar">
+    <div class="section">
+      <h3>プリセット</h3>
+      <div class="btn-row">
+        <button onclick="preset('figure8')">∞ 8の字軌道（3体）</button>
+        <button onclick="preset('solar')">☀ 太陽系モデル</button>
+        <button onclick="preset('binary')">⊕ 連星系</button>
+        <button onclick="preset('chaos')">🌀 カオス（5体）</button>
+        <button onclick="preset('galaxy')">🌌 銀河衝突</button>
+      </div>
+    </div>
+    <div class="section">
+      <h3>パラメーター</h3>
+      <label>G（重力定数）<span class="val" id="gval">1.0</span></label>
+      <input type="range" id="G" min="0.1" max="5" step="0.1" value="1.0"
+        oninput="G=+this.value;document.getElementById('gval').textContent=G.toFixed(1)">
+
+      <label>減衰<span class="val" id="dval">1.00</span></label>
+      <input type="range" id="damp" min="0.90" max="1.00" step="0.001" value="1.000"
+        oninput="damping=+this.value;document.getElementById('dval').textContent=damping.toFixed(3)">
+
+      <label>トレイル長<span class="val" id="tval">120</span></label>
+      <input type="range" id="trail" min="0" max="400" step="10" value="120"
+        oninput="trailLen=+this.value;document.getElementById('tval').textContent=trailLen">
+
+      <label>速度スケール<span class="val" id="sval">1.0</span></label>
+      <input type="range" id="spd" min="0.1" max="5" step="0.1" value="1.0"
+        oninput="simSpeed=+this.value;document.getElementById('sval').textContent=simSpeed.toFixed(1)">
+    </div>
+    <div class="section">
+      <h3>操作</h3>
+      <div class="btn-row">
+        <button onclick="togglePause()" id="pauseBtn">⏸ 一時停止</button>
+        <button onclick="addRandom()">＋ ランダム追加</button>
+        <button onclick="clearAll()" class="danger">✕ 全消去</button>
+      </div>
+    </div>
+    <div class="section">
+      <h3>統計</h3>
+      <div class="stats" id="stats">bodies: <b>0</b></div>
+    </div>
+    <div class="hint">
+      <b>操作ガイド</b><br>
+      <kbd>クリック</kbd> 天体を追加<br>
+      <kbd>ドラッグ</kbd> 速度を設定<br>
+      <kbd>Space</kbd> 一時停止<br>
+      <kbd>R</kbd> ランダム追加<br>
+      <kbd>C</kbd> 全消去
+    </div>
+  </aside>
+</div>
+
+<script>
+// ===== State =====
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let bodies = [];
+let G = 1.0;
+let damping = 1.0;
+let trailLen = 120;
+let simSpeed = 1.0;
+let paused = false;
+let mouseDown = false;
+let dragStart = null;
+let mousePos = { x: 0, y: 0 };
+let frameCount = 0;
+let fps = 0;
+let lastFpsTime = performance.now();
+
+// Color palette for bodies
+const PALETTE = [
+  '#6c63ff','#ff6584','#43d9ad','#ffcc5c','#fc5c7d',
+  '#6a82fb','#11998e','#f7971e','#ee0979','#56ccf2'
+];
+
+class Body {
+  constructor(x, y, vx, vy, mass, color) {
+    this.x = x; this.y = y;
+    this.vx = vx; this.vy = vy;
+    this.mass = mass;
+    this.radius = Math.cbrt(mass) * 3;
+    this.color = color || PALETTE[Math.floor(Math.random() * PALETTE.length)];
+    this.trail = [];
+    this.ax = 0; this.ay = 0;
+  }
+}
+
+// ===== Physics (Leapfrog / Verlet) =====
+function computeForces() {
+  for (const b of bodies) { b.ax = 0; b.ay = 0; }
+  for (let i = 0; i < bodies.length; i++) {
+    for (let j = i + 1; j < bodies.length; j++) {
+      const a = bodies[i], b = bodies[j];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const r2 = dx * dx + dy * dy;
+      const softening = 200; // softening factor to avoid singularity
+      const r2s = r2 + softening;
+      const r = Math.sqrt(r2s);
+      const f = G * a.mass * b.mass / r2s;
+      const fx = f * dx / r, fy = f * dy / r;
+      a.ax += fx / a.mass;
+      a.ay += fy / a.mass;
+      b.ax -= fx / b.mass;
+      b.ay -= fy / b.mass;
+    }
+  }
+}
+
+function integrate(dt) {
+  for (const b of bodies) {
+    b.vx = (b.vx + b.ax * dt) * damping;
+    b.vy = (b.vy + b.ay * dt) * damping;
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+    b.trail.push({ x: b.x, y: b.y });
+    if (b.trail.length > trailLen) b.trail.shift();
+    // wrap around
+    if (b.x < -canvas.width) b.x = canvas.width;
+    if (b.x > canvas.width * 2) b.x = -canvas.width;
+    if (b.y < -canvas.height) b.y = canvas.height;
+    if (b.y > canvas.height * 2) b.y = -canvas.height;
+  }
+}
+
+// ===== Rendering =====
+function draw() {
+  ctx.fillStyle = 'rgba(10,10,20,0.22)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Trails
+  for (const b of bodies) {
+    if (b.trail.length < 2) continue;
+    ctx.beginPath();
+    ctx.moveTo(b.trail[0].x, b.trail[0].y);
+    for (let i = 1; i < b.trail.length; i++) {
+      ctx.lineTo(b.trail[i].x, b.trail[i].y);
+    }
+    const grad = ctx.createLinearGradient(
+      b.trail[0].x, b.trail[0].y,
+      b.trail[b.trail.length-1].x, b.trail[b.trail.length-1].y
+    );
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(1, b.color + '88');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  // Bodies
+  for (const b of bodies) {
+    // Glow
+    const grd = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius * 3);
+    grd.addColorStop(0, b.color + 'cc');
+    grd.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.radius * 3, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+    // Core
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+    ctx.fillStyle = b.color;
+    ctx.shadowColor = b.color;
+    ctx.shadowBlur = 12;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  // Drag preview
+  if (mouseDown && dragStart) {
+    const vx = (mousePos.x - dragStart.x) * 0.08;
+    const vy = (mousePos.y - dragStart.y) * 0.08;
+    ctx.beginPath();
+    ctx.moveTo(dragStart.x, dragStart.y);
+    ctx.lineTo(mousePos.x, mousePos.y);
+    ctx.strokeStyle = '#ffffff55';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 5]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.arc(dragStart.x, dragStart.y, 8, 0, Math.PI * 2);
+    ctx.strokeStyle = '#ffffffaa';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // Velocity arrow
+    const len = Math.sqrt(vx * vx + vy * vy);
+    if (len > 0.5) {
+      const nx = vx / len, ny = vy / len;
+      const tx = mousePos.x, ty = mousePos.y;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(tx - nx * 12 + ny * 6, ty - ny * 12 - nx * 6);
+      ctx.lineTo(tx - nx * 12 - ny * 6, ty - ny * 12 + nx * 6);
+      ctx.closePath();
+      ctx.fillStyle = '#ffffff88';
+      ctx.fill();
+    }
+  }
+}
+
+// ===== Main loop =====
+let lastTime = null;
+function loop(ts) {
+  requestAnimationFrame(loop);
+  const dt = lastTime ? Math.min((ts - lastTime) / 1000, 0.05) : 0.016;
+  lastTime = ts;
+
+  // FPS
+  frameCount++;
+  if (ts - lastFpsTime > 1000) {
+    fps = Math.round(frameCount * 1000 / (ts - lastFpsTime));
+    frameCount = 0; lastFpsTime = ts;
+    updateStats();
+  }
+
+  if (!paused) {
+    const steps = Math.ceil(simSpeed);
+    const subdt = dt * simSpeed / steps;
+    for (let i = 0; i < steps; i++) {
+      computeForces();
+      integrate(subdt);
+    }
+  }
+  draw();
+}
+
+// ===== Stats =====
+function updateStats() {
+  let ke = 0;
+  for (const b of bodies) {
+    ke += 0.5 * b.mass * (b.vx * b.vx + b.vy * b.vy);
+  }
+  document.getElementById('stats').innerHTML =
+    `天体数: <b>${bodies.length}</b><br>` +
+    `運動エネルギー: <b>${ke.toFixed(0)}</b><br>` +
+    `FPS: <b>${fps}</b>`;
+}
+
+// ===== Events =====
+function resize() {
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+canvas.addEventListener('mousedown', e => {
+  const r = canvas.getBoundingClientRect();
+  dragStart = { x: e.clientX - r.left, y: e.clientY - r.top };
+  mouseDown = true;
+});
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mousePos = { x: e.clientX - r.left, y: e.clientY - r.top };
+});
+canvas.addEventListener('mouseup', e => {
+  if (!dragStart) return;
+  const r = canvas.getBoundingClientRect();
+  const ex = e.clientX - r.left, ey = e.clientY - r.top;
+  const vx = (ex - dragStart.x) * 0.08;
+  const vy = (ey - dragStart.y) * 0.08;
+  const mass = 10 + Math.random() * 40;
+  bodies.push(new Body(dragStart.x, dragStart.y, vx, vy, mass));
+  mouseDown = false; dragStart = null;
+});
+canvas.addEventListener('mouseleave', () => { mouseDown = false; dragStart = null; });
+
+// Touch support
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  const t = e.touches[0];
+  dragStart = { x: t.clientX - r.left, y: t.clientY - r.top };
+  mouseDown = true;
+}, { passive: false });
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  const t = e.touches[0];
+  mousePos = { x: t.clientX - r.left, y: t.clientY - r.top };
+}, { passive: false });
+canvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  if (!dragStart) return;
+  const vx = (mousePos.x - dragStart.x) * 0.08;
+  const vy = (mousePos.y - dragStart.y) * 0.08;
+  bodies.push(new Body(dragStart.x, dragStart.y, vx, vy, 20 + Math.random() * 30));
+  mouseDown = false; dragStart = null;
+}, { passive: false });
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { e.preventDefault(); togglePause(); }
+  if (e.key === 'r' || e.key === 'R') addRandom();
+  if (e.key === 'c' || e.key === 'C') clearAll();
+});
+
+// ===== Controls =====
+function togglePause() {
+  paused = !paused;
+  document.getElementById('pauseBtn').textContent = paused ? '▶ 再生' : '⏸ 一時停止';
+}
+function addRandom() {
+  const x = 100 + Math.random() * (canvas.width - 200);
+  const y = 100 + Math.random() * (canvas.height - 200);
+  const angle = Math.random() * Math.PI * 2;
+  const spd = 1 + Math.random() * 3;
+  const mass = 10 + Math.random() * 60;
+  bodies.push(new Body(x, y, Math.cos(angle) * spd, Math.sin(angle) * spd, mass));
+}
+function clearAll() {
+  bodies = [];
+}
+
+// ===== Presets =====
+function preset(name) {
+  bodies = [];
+  const cx = canvas.width / 2, cy = canvas.height / 2;
+  if (name === 'figure8') {
+    // Chenciner & Montgomery figure-8 solution (normalized)
+    const scale = Math.min(canvas.width, canvas.height) * 0.18;
+    const vscale = scale * 0.9;
+    const positions = [
+      { x: -0.97000436, y: 0.24308753 },
+      { x:  0.97000436, y: -0.24308753 },
+      { x:  0, y: 0 }
+    ];
+    const vels = [
+      { vx: 0.93240737 / 2, vy: 0.86473146 / 2 },
+      { vx: 0.93240737 / 2, vy: 0.86473146 / 2 },
+      { vx: -0.93240737, vy: -0.86473146 }
+    ];
+    const colors = ['#6c63ff', '#ff6584', '#43d9ad'];
+    for (let i = 0; i < 3; i++) {
+      bodies.push(new Body(
+        cx + positions[i].x * scale,
+        cy + positions[i].y * scale,
+        vels[i].vx * vscale * 0.012,
+        vels[i].vy * vscale * 0.012,
+        20, colors[i]
+      ));
+    }
+    G = 1.0; document.getElementById('G').value = 1.0;
+    document.getElementById('gval').textContent = '1.0';
+  } else if (name === 'solar') {
+    const sun = new Body(cx, cy, 0, 0, 200, '#ffcc5c');
+    bodies.push(sun);
+    const planets = [
+      { r: 80, m: 5, spd: 5.0, c: '#6c63ff' },
+      { r: 130, m: 10, spd: 3.8, c: '#43d9ad' },
+      { r: 190, m: 8, spd: 3.0, c: '#fc5c7d' },
+      { r: 260, m: 6, spd: 2.3, c: '#ff6584' },
+    ];
+    for (const p of planets) {
+      const angle = Math.random() * Math.PI * 2;
+      const v = Math.sqrt(G * sun.mass / p.r);
+      bodies.push(new Body(
+        cx + Math.cos(angle) * p.r,
+        cy + Math.sin(angle) * p.r,
+        -Math.sin(angle) * v * p.spd * 0.2,
+        Math.cos(angle) * v * p.spd * 0.2,
+        p.m, p.c
+      ));
+    }
+    G = 2.0; document.getElementById('G').value = 2.0;
+    document.getElementById('gval').textContent = '2.0';
+  } else if (name === 'binary') {
+    const m = 60;
+    const r = 120;
+    const v = Math.sqrt(G * m / (2 * r)) * 8;
+    bodies.push(new Body(cx - r, cy, 0, v, m, '#6c63ff'));
+    bodies.push(new Body(cx + r, cy, 0, -v, m, '#ff6584'));
+    // Add a small moon
+    bodies.push(new Body(cx - r + 40, cy, 0, v + 2.5, 3, '#43d9ad'));
+    G = 1.5; document.getElementById('G').value = 1.5;
+    document.getElementById('gval').textContent = '1.5';
+  } else if (name === 'chaos') {
+    const colors = ['#6c63ff','#ff6584','#43d9ad','#ffcc5c','#fc5c7d'];
+    for (let i = 0; i < 5; i++) {
+      const angle = (i / 5) * Math.PI * 2;
+      const r = 140;
+      const vx = -Math.sin(angle) * 2.2 + (Math.random() - 0.5) * 0.8;
+      const vy =  Math.cos(angle) * 2.2 + (Math.random() - 0.5) * 0.8;
+      bodies.push(new Body(
+        cx + Math.cos(angle) * r,
+        cy + Math.sin(angle) * r,
+        vx, vy, 25 + Math.random() * 15, colors[i]
+      ));
+    }
+    G = 1.2; document.getElementById('G').value = 1.2;
+    document.getElementById('gval').textContent = '1.2';
+  } else if (name === 'galaxy') {
+    // Two clusters approaching each other
+    const addCluster = (ox, oy, dvx) => {
+      const center = new Body(ox, oy, dvx, 0, 150, '#ffcc5c');
+      bodies.push(center);
+      for (let i = 0; i < 15; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const r = 30 + Math.random() * 100;
+        const v = Math.sqrt(G * center.mass / r) * 1.5;
+        bodies.push(new Body(
+          ox + Math.cos(angle) * r,
+          oy + Math.sin(angle) * r,
+          dvx - Math.sin(angle) * v,
+          Math.cos(angle) * v,
+          2 + Math.random() * 5,
+          PALETTE[Math.floor(Math.random() * PALETTE.length)]
+        ));
+      }
+    };
+    addCluster(cx - 220, cy, 1.2);
+    addCluster(cx + 220, cy, -1.2);
+    G = 1.5; document.getElementById('G').value = 1.5;
+    document.getElementById('gval').textContent = '1.5';
+  }
+}
+
+// ===== Start =====
+preset('figure8');
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

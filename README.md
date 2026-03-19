@@ -23,6 +23,7 @@
 | 20260305 | [D] セキュリティ／ネットワーク | Python | `ThreatPulse` | MacBook Neo $599、Cisco CVE-2026-20127 CVSS 10.0、ハクティビスト DDoS 149件、Wi-Fi センシング（RuView） | `20260305/` |
 | 20260307 | [C] CLIツール | Rust | `vulntriage` | Windsurf/Cursor マルチエージェント並列開発、nearai/ironclaw Rust セキュリティ、Android 129件 CVE パッチ | `20260307/` |
 | 20260309 | [D] セキュリティ／ネットワーク | Python | `AgentAudit` | Agent Safehouse (HN Top)、MCP2CLI、Anthropic×Firefox 22件脆弱性発見、NIST AI エージェントセキュリティ | `20260309/` |
+| 20260319 | [E] データ可視化 | Vanilla JS (Canvas API) | `gravity-playground` | HN「三体問題ブラウザシミュレーター」急上昇、GitHub Trending newton-physics/newton、claude-hud 1851★/day | `20260319/` |
 
 ---
 
