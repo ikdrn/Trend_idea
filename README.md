@@ -24,6 +24,7 @@
 | 20260307 | [C] CLIツール | Rust | `vulntriage` | Windsurf/Cursor マルチエージェント並列開発、nearai/ironclaw Rust セキュリティ、Android 129件 CVE パッチ | `20260307/` |
 | 20260309 | [D] セキュリティ／ネットワーク | Python | `AgentAudit` | Agent Safehouse (HN Top)、MCP2CLI、Anthropic×Firefox 22件脆弱性発見、NIST AI エージェントセキュリティ | `20260309/` |
 | 20260319 | [E] データ可視化 | Vanilla JS (Canvas API) | `gravity-playground` | HN「三体問題ブラウザシミュレーター」急上昇、GitHub Trending newton-physics/newton、claude-hud 1851★/day | `20260319/` |
+| 20260321 | [H] AIインテグレーション | Node.js + Express | `agentic-trend-classifier` | Google Sashiko (Agentic AI Code Review)、NemoClaw/OpenClaw 210k+ stars、Product Hunt AI Agents支配、CVE-2026-3888 Ubuntu systemd | `20260321/` |
 
 ---
 
