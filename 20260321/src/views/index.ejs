@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Trend Classifier - AI Agent & Security Trend Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                   'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                   sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #667eea;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+      font-size: 0.95em;
+      color: #666;
+      flex-wrap: wrap;
+    }
+
+    .header-meta span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 2em;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-card .label {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+
+    .trends-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .trend-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-left: 4px solid #667eea;
+    }
+
+    .trend-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .repo-name {
+      font-size: 1.3em;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .repo-name a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .repo-name a:hover {
+      text-decoration: underline;
+    }
+
+    .repo-desc {
+      color: #666;
+      font-size: 0.95em;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .repo-meta {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 0.85em;
+      font-weight: 500;
+    }
+
+    .badge-lang {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .badge-stars {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .scores {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .score-label {
+      font-weight: 500;
+      color: #666;
+    }
+
+    .score-bar {
+      flex: 1;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      margin: 0 12px;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .score-ai {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+
+    .score-security {
+      background: linear-gradient(90deg, #f093fb, #f5576c);
+    }
+
+    .score-value {
+      font-weight: 600;
+      min-width: 40px;
+      text-align: right;
+      color: #333;
+    }
+
+    .trend-tag {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+
+    .trend-ai {
+      background: #e0e7ff;
+      color: #4f46e5;
+    }
+
+    .trend-security {
+      background: #ffe0e0;
+      color: #dc2626;
+    }
+
+    .trend-general {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      margin-top: 40px;
+      padding: 20px;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .trends-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 20px;
+      }
+
+      .trend-card {
+        padding: 20px;
+      }
+    }
+
+    .refresh-note {
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🤖 Agentic Trend Classifier</h1>
+      <p style="color: #666; margin-top: 5px;">GitHub Trending の AI Agent & Security スコア自動分類</p>
+
+      <div class="header-meta">
+        <span>
+          📊 <strong><%= totalRepos %> リポジトリ</strong> (Top 10)
+        </span>
+        <span>
+          🔄 更新: <%= lastUpdated %>
+        </span>
+        <span>
+          ⏱️ 1時間ごと自動更新
+        </span>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="number"><%= repos.filter(r => r.scores.trend === 'AI Agent').length %></div>
+          <div class="label">AI Agent 関連</div>
+        </div>
+        <div class="stat-card">
+          <div class="number"><%= repos.filter(r => r.scores.trend === 'Security').length %></div>
+          <div class="label">セキュリティ関連</div>
+        </div>
+        <div class="stat-card">
+          <div class="number"><%= (repos.reduce((s, r) => s + r.scores.aiAgent, 0) / repos.length).toFixed(0) %></div>
+          <div class="label">平均 AI スコア</div>
+        </div>
+      </div>
+
+      <div class="refresh-note">
+        💡 <strong>分類ロジック</strong>: キーワードマッチング + スコアリング。GitHub Trending データをリアルタイムで解析。
+      </div>
+    </header>
+
+    <div class="trends-grid">
+      <% repos.forEach((repo, idx) => { %>
+        <div class="trend-card">
+          <div class="repo-name">
+            #<%= idx + 1 %> <a href="<%= repo.url %>" target="_blank"><%= repo.name %></a>
+          </div>
+
+          <div class="repo-desc"><%= repo.description %></div>
+
+          <div class="repo-meta">
+            <span class="badge badge-lang">📝 <%= repo.language || 'Unknown' %></span>
+            <span class="badge badge-stars">⭐ <%= repo.stars %></span>
+          </div>
+
+          <div class="scores">
+            <div class="score-row">
+              <span class="score-label">🤖 AI Agent</span>
+              <div class="score-bar">
+                <div class="score-fill score-ai" style="width: <%= repo.scores.aiAgent %>%"></div>
+              </div>
+              <span class="score-value"><%= repo.scores.aiAgent %>%</span>
+            </div>
+
+            <div class="score-row">
+              <span class="score-label">🔒 Security</span>
+              <div class="score-bar">
+                <div class="score-fill score-security" style="width: <%= repo.scores.security %>%"></div>
+              </div>
+              <span class="score-value"><%= repo.scores.security %>%</span>
+            </div>
+          </div>
+
+          <div>
+            <% if (repo.scores.trend === 'AI Agent') { %>
+              <span class="trend-tag trend-ai">🤖 AI Agent</span>
+            <% } else if (repo.scores.trend === 'Security') { %>
+              <span class="trend-tag trend-security">🔒 Security</span>
+            <% } else { %>
+              <span class="trend-tag trend-general">📦 General</span>
+            <% } %>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+
+    <footer>
+      <p>Agentic Trend Classifier | Powered by Node.js + Express | Data: GitHub Trending (Real-time)</p>
+      <p style="margin-top: 10px; font-size: 0.9em;">
+        API: <code><a href="/api/trends" style="color: white; text-decoration: underline;">GET /api/trends</a></code>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PackageGuard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 350px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+    }
+
+    .container {
+      padding: 16px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 12px;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      margin-left: 8px;
+      color: #333;
+    }
+
+    .package-info {
+      background: white;
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-left: 4px solid #007bff;
+    }
+
+    .package-info.empty {
+      color: #666;
+      font-size: 14px;
+      border-left-color: #ccc;
+    }
+
+    .package-name {
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .score-bar {
+      width: 100%;
+      height: 24px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .score-fill {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+      transition: width 0.3s;
+    }
+
+    .risk-badge {
+      font-size: 12px;
+      color: #dc3545;
+      margin-top: 8px;
+      padding: 6px;
+      background: #fff8f8;
+      border-radius: 3px;
+    }
+
+    .info-section {
+      background: white;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .info-section h3 {
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .info-item {
+      margin-bottom: 6px;
+    }
+
+    .info-label {
+      color: #999;
+      font-size: 12px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: #007bff;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0056b3;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #545b62;
+    }
+
+    .footer {
+      font-size: 11px;
+      color: #999;
+      text-align: center;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span>🛡️</span>
+      <h1>PackageGuard</h1>
+    </div>
+
+    <div id="package-display" class="package-info empty">
+      Navigate to npm.com or VSCode Marketplace to check a package security score.
+    </div>
+
+    <div class="info-section">
+      <h3>What is this?</h3>
+      <p>
+        PackageGuard automatically scores npm and VSCode packages for security trust based on:
+        <br><br>
+        <strong>Positive signals:</strong> Downloads, recent updates, GitHub stars, license
+        <br><br>
+        <strong>Risk flags:</strong> New packages, unmaintained, no readme
+      </p>
+    </div>
+
+    <div class="button-group">
+      <button class="btn-secondary" id="btn-refresh">Refresh</button>
+      <button class="btn-primary" id="btn-report">Report Issue</button>
+    </div>
+
+    <div class="footer">
+      PackageGuard v1.0 | GlassWorm response tool
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
