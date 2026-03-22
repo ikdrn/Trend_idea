@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "PackageGuard - npm/VSX Security Score",
+  "version": "1.0.0",
+  "description": "Real-time security trust score for npm and VSCode Marketplace packages",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.npmjs.com/*",
+    "https://marketplace.visualstudio.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "PackageGuard - Security Score"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.npmjs.com/package/*",
+        "https://marketplace.visualstudio.com/items?*"
+      ],
+      "js": ["content-script.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
