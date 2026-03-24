@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Query Dashboard - AI Agent Result Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .control-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid #667eea;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .result-card.error {
+            border-left-color: #ff6b6b;
+        }
+
+        .result-card.success {
+            border-left-color: #51cf66;
+        }
+
+        .result-card.pending {
+            border-left-color: #ffd93d;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .result-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-badge.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .result-metadata {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .result-content {
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            line-height: 1.5;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .result-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .result-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 8px;
+        }
+
+        .result-content::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 8px;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .result-actions button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            background: #667eea;
+        }
+
+        .result-actions button.delete {
+            background: #ff6b6b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #999;
+        }
+
+        .empty-state h2 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Agent Query Dashboard</h1>
+            <p>AI Agent の実行結果をリアルタイムで可視化</p>
+        </header>
+
+        <div class="control-panel">
+            <div class="input-group">
+                <input
+                    type="text"
+                    id="agentName"
+                    placeholder="Agent名を入力（例：DataAnalyzerBot）"
+                >
+            </div>
+            <div class="input-group">
+                <input
+                    type="text"
+                    id="queryInput"
+                    placeholder="クエリを入力（例：GitHub trending repos）"
+                >
+            </div>
+            <select id="agentType">
+                <option value="search">🔍 検索Agent</option>
+                <option value="analytics">📊 分析Agent</option>
+                <option value="summary">📝 要約Agent</option>
+                <option value="chat">💬 チャットAgent</option>
+            </select>
+            <button id="submitBtn">実行</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-box">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">実行数</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="successCount">0</div>
+                <div class="stat-label">成功</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="errorCount">0</div>
+                <div class="stat-label">エラー</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="avgTime">0ms</div>
+                <div class="stat-label">平均時間</div>
+            </div>
+        </div>
+
+        <div id="resultsContainer" class="results-grid"></div>
+    </div>
+
+    <script type="text/typescript">
+        interface AgentResult {
+            id: string;
+            agentName: string;
+            agentType: 'search' | 'analytics' | 'summary' | 'chat';
+            query: string;
+            result: string;
+            status: 'success' | 'error' | 'pending';
+            executionTime: number;
+            timestamp: number;
+        }
+
+        class AgentQueryDashboard {
+            private results: AgentResult[] = [];
+            private readonly STORAGE_KEY = 'agent-results';
+            private readonly MAX_RESULTS = 50;
+
+            constructor() {
+                this.loadFromStorage();
+                this.setupEventListeners();
+                this.render();
+            }
+
+            private setupEventListeners(): void {
+                const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+                const queryInput = document.getElementById('queryInput') as HTMLInputElement;
+
+                submitBtn.addEventListener('click', () => this.submitQuery());
+                queryInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.submitQuery();
+                });
+            }
+
+            private async submitQuery(): Promise<void> {
+                const agentName = (document.getElementById('agentName') as HTMLInputElement).value.trim();
+                const query = (document.getElementById('queryInput') as HTMLInputElement).value.trim();
+                const agentType = (document.getElementById('agentType') as HTMLSelectElement).value as 'search' | 'analytics' | 'summary' | 'chat';
+
+                if (!agentName || !query) {
+                    alert('Agent名とクエリを入力してください');
+                    return;
+                }
+
+                const resultId = Math.random().toString(36).substr(2, 9);
+                const startTime = performance.now();
+
+                const pendingResult: AgentResult = {
+                    id: resultId,
+                    agentName,
+                    agentType,
+                    query,
+                    result: '実行中...',
+                    status: 'pending',
+                    executionTime: 0,
+                    timestamp: Date.now()
+                };
+
+                this.results.unshift(pendingResult);
+                this.render();
+
+                // シミュレート：実行時間 500-2000ms
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 1500 + 500));
+
+                const executionTime = Math.round(performance.now() - startTime);
+                const isSuccess = Math.random() > 0.15; // 85% 成功率
+
+                const mockResults = this.generateMockResult(agentType, query);
+
+                const updatedResult = this.results.find(r => r.id === resultId);
+                if (updatedResult) {
+                    updatedResult.result = mockResults;
+                    updatedResult.status = isSuccess ? 'success' : 'error';
+                    updatedResult.executionTime = executionTime;
+                }
+
+                this.render();
+                this.saveToStorage();
+
+                // 入力をクリア
+                (document.getElementById('agentName') as HTMLInputElement).value = '';
+                (document.getElementById('queryInput') as HTMLInputElement).value = '';
+            }
+
+            private generateMockResult(agentType: string, query: string): string {
+                const results: { [key: string]: string[] } = {
+                    search: [
+                        `検索結果: "${query}" に関する ${Math.floor(Math.random() * 1000) + 100} 件のエントリを発見`,
+                        `トップ結果: GitHub Trending、Product Hunt、Hacker News から取得`,
+                        `関連キーワード: AI Agent, Answer Engine, LLM Integration`
+                    ],
+                    analytics: [
+                        `分析対象: ${query}`,
+                        `トレンドスコア: ${Math.floor(Math.random() * 100)}/100`,
+                        `カテゴリ: Development Tools, AI/ML, Infrastructure`,
+                        `過去24時間の変動: +${Math.floor(Math.random() * 500)} stars`
+                    ],
+                    summary: [
+                        `要約: ${query}`,
+                        `主な要点:`,
+                        `• AI Agent関連のツールが継続注目`,
+                        `• Answer Engine Optimization がHN話題に`,
+                        `• GitHub Trending で OpenClaw (210k+ stars)`,
+                        `信頼度: ${80 + Math.floor(Math.random() * 20)}%`
+                    ],
+                    chat: [
+                        `User: "${query}"`,
+                        `Bot: ご質問ありがとうございます。本日のトレンドから、`,
+                        `${query}に関連する重要な情報が ${Math.floor(Math.random() * 50) + 5} 件見つかりました。`,
+                        `詳細はダッシュボードから確認できます。`
+                    ]
+                };
+
+                return (results[agentType] || results.search).join('\n');
+            }
+
+            private deleteResult(id: string): void {
+                this.results = this.results.filter(r => r.id !== id);
+                this.render();
+                this.saveToStorage();
+            }
+
+            private copyToClipboard(text: string): void {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('クリップボードにコピーしました');
+                }).catch(() => {
+                    alert('コピーに失敗しました');
+                });
+            }
+
+            private updateStats(): void {
+                const total = this.results.length;
+                const success = this.results.filter(r => r.status === 'success').length;
+                const errors = this.results.filter(r => r.status === 'error').length;
+                const avgTime = total > 0
+                    ? Math.round(this.results.reduce((sum, r) => sum + r.executionTime, 0) / total)
+                    : 0;
+
+                (document.getElementById('totalCount') as HTMLElement).textContent = total.toString();
+                (document.getElementById('successCount') as HTMLElement).textContent = success.toString();
+                (document.getElementById('errorCount') as HTMLElement).textContent = errors.toString();
+                (document.getElementById('avgTime') as HTMLElement).textContent = `${avgTime}ms`;
+            }
+
+            private render(): void {
+                const container = document.getElementById('resultsContainer') as HTMLElement;
+
+                if (this.results.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1 / -1;">
+                            <div class="empty-state">
+                                <h2>まだ実行がありません</h2>
+                                <p>Agent名とクエリを入力して、「実行」ボタンをクリックしてください</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = this.results.slice(0, this.MAX_RESULTS).map(result => `
+                        <div class="result-card ${result.status}">
+                            <div class="result-header">
+                                <div class="result-title">${this.escapeHtml(result.agentName)}</div>
+                                <span class="status-badge ${result.status}">
+                                    ${this.getStatusLabel(result.status)}
+                                </span>
+                            </div>
+                            <div class="result-metadata">
+                                <div class="metadata-item">📂 ${this.getAgentTypeLabel(result.agentType)}</div>
+                                <div class="metadata-item">⏱️ ${result.executionTime}ms</div>
+                                <div class="metadata-item">🕐 ${new Date(result.timestamp).toLocaleTimeString('ja-JP')}</div>
+                            </div>
+                            <div class="result-content">${this.escapeHtml(result.result)}</div>
+                            <div class="result-actions">
+                                <button onclick="dashboard.copyResult('${result.result}')">📋 Copy</button>
+                                <button class="delete" onclick="dashboard.deleteResult('${result.id}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                this.updateStats();
+            }
+
+            private getStatusLabel(status: string): string {
+                const labels: { [key: string]: string } = {
+                    'success': '✓ 成功',
+                    'error': '✗ エラー',
+                    'pending': '⟳ 実行中'
+                };
+                return labels[status] || status;
+            }
+
+            private getAgentTypeLabel(type: string): string {
+                const labels: { [key: string]: string } = {
+                    'search': '🔍 検索',
+                    'analytics': '📊 分析',
+                    'summary': '📝 要約',
+                    'chat': '💬 チャット'
+                };
+                return labels[type] || type;
+            }
+
+            private escapeHtml(text: string): string {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            private saveToStorage(): void {
+                try {
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.results));
+                } catch (e) {
+                    console.warn('LocalStorage save failed:', e);
+                }
+            }
+
+            private loadFromStorage(): void {
+                try {
+                    const stored = localStorage.getItem(this.STORAGE_KEY);
+                    if (stored) {
+                        this.results = JSON.parse(stored);
+                    }
+                } catch (e) {
+                    console.warn('LocalStorage load failed:', e);
+                }
+            }
+
+            public copyResult(text: string): void {
+                this.copyToClipboard(text);
+            }
+
+            public deleteResult(id: string): void {
+                this.deleteResult(id);
+            }
+        }
+
+        // グローバルにダッシュボードインスタンスを作成
+        let dashboard: AgentQueryDashboard;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            dashboard = new AgentQueryDashboard();
+        });
+    </script>
+</body>
+</html>
