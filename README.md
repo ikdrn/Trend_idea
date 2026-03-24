@@ -26,6 +26,8 @@
 | 20260319 | [E] データ可視化 | Vanilla JS (Canvas API) | `gravity-playground` | HN「三体問題ブラウザシミュレーター」急上昇、GitHub Trending newton-physics/newton、claude-hud 1851★/day | `20260319/` |
 | 20260321 | [H] AIインテグレーション | Node.js + Express | `agentic-trend-classifier` | Google Sashiko (Agentic AI Code Review)、NemoClaw/OpenClaw 210k+ stars、Product Hunt AI Agents支配、CVE-2026-3888 Ubuntu systemd | `20260321/` |
 | 20260322 | [F] ブラウザ拡張 / ユーザースクリプト | Manifest V3 (JavaScript) | `PackageGuard` | GlassWorm サプライチェーン攻撃（VSX/npm 72拡張悪用）、North Korean npm パッケージ RAT、Anthropic Claude Firefox 脆弱性自動検出 | `20260322/` |
+| 20260323 | [A] フロントエンドUI | Svelte + TypeScript | `AgentMonitor` | TradingAgents（マルチエージェント LLM 金融取引）、pentagi（自動ペネテスト）、everything-claude-code（エージェント最適化 98k+ ⭐） | `20260323/` |
+| 20260324 | [A] フロントエンドUI | Vanilla JS + TypeScript | `agent-query-dashboard` | AI Agent実行結果可視化、Answer Engine Optimization、Product Hunt AI Agents統合ツール流行（Query Memory、Aident AI） | `20260324/` |
 
 ---
 
