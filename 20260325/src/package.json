@@ -1,0 +1,19 @@
+{
+  "name": "vuln-watch",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "@anthropic-ai/sdk": "^0.27.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "tsx": "^4.10.5",
+    "@types/node": "^20.12.12"
+  }
+}
