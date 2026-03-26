@@ -27,6 +27,8 @@
 | 20260321 | [H] AIインテグレーション | Node.js + Express | `agentic-trend-classifier` | Google Sashiko (Agentic AI Code Review)、NemoClaw/OpenClaw 210k+ stars、Product Hunt AI Agents支配、CVE-2026-3888 Ubuntu systemd | `20260321/` |
 | 20260322 | [F] ブラウザ拡張 / ユーザースクリプト | Manifest V3 (JavaScript) | `PackageGuard` | GlassWorm サプライチェーン攻撃（VSX/npm 72拡張悪用）、North Korean npm パッケージ RAT、Anthropic Claude Firefox 脆弱性自動検出 | `20260322/` |
 | 20260324 | [A] フロントエンドUI | Vanilla JS + TypeScript | `agent-query-dashboard` | AI Agent実行結果可視化、Answer Engine Optimization、Product Hunt AI Agents統合ツール流行（Query Memory、Aident AI） | `20260324/` |
+| 20260325 | [B] フルスタックWebアプリ | Hono + TypeScript | `VulnWatch` | AI パッケージ脆弱性トレンド監視、LLM アプリセキュリティ自動検査、Vercel AI SDK 活用 | `20260325/` |
+| 20260326 | [C] CLIツール | Rust + clap | `threat-monitor` | TeamPCP litellm 侵害、Trivy GitHub Actions 攻撃、CVE-2026-33017 Langflow 即座悪用、AI パッケージサプライチェーン脅威化 | `20260326/` |
 
 ---
 
