@@ -28,6 +28,7 @@
 | 20260322 | [F] ブラウザ拡張 / ユーザースクリプト | Manifest V3 (JavaScript) | `PackageGuard` | GlassWorm サプライチェーン攻撃（VSX/npm 72拡張悪用）、North Korean npm パッケージ RAT、Anthropic Claude Firefox 脆弱性自動検出 | `20260322/` |
 | 20260323 | [A] フロントエンドUI | Svelte + TypeScript | `AgentMonitor` | TradingAgents（マルチエージェント LLM 金融取引）、pentagi（自動ペネテスト）、everything-claude-code（エージェント最適化 98k+ ⭐） | `20260323/` |
 | 20260324 | [A] フロントエンドUI | Vanilla JS + TypeScript | `agent-query-dashboard` | AI Agent実行結果可視化、Answer Engine Optimization、Product Hunt AI Agents統合ツール流行（Query Memory、Aident AI） | `20260324/` |
+| 20260326 | [B] フルスタックWebアプリ | Next.js + TypeScript | `SecurityPulse` | Trivy Supply Chain Attack (CanisterWorm × npm)、Aident AI automation ブーム、リアルタイム脅威＆エージェント監視 | `20260326/` |
 
 ---
 
